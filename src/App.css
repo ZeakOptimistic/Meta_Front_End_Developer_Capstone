@@ -1,3 +1,4 @@
+/* Core App Styles */
 .App {
   text-align: center;
 }
@@ -37,7 +38,6 @@
   }
 }
 
-
 /* Reset & base styles */
 body {
   margin: 0;
@@ -46,7 +46,7 @@ body {
   color: #333;
 }
 
-/* Grid layout wrapper */
+/* Layout */
 .layout {
   display: grid;
   grid-template-areas:
@@ -58,7 +58,6 @@ body {
   min-height: 100vh;
 }
 
-/* Responsive grid for tablet and desktop */
 @media (min-width: 768px) {
   .layout {
     grid-template-areas:
@@ -68,8 +67,6 @@ body {
     grid-template-columns: 250px 1fr;
   }
 }
-
-/* Section styles */
 
 /* Headings */
 h1, h2, h3, h4, h5, h6 {
@@ -97,29 +94,43 @@ p {
   margin-bottom: 1rem;
 }
 
-/* Span highlights (e.g., specials, inline emphasis) */
+/* Spans for emphasis */
 span {
   color: #f4ce14;
   font-weight: 500;
 }
 
+/* Header */
 header {
   grid-area: header;
   background-color: #495e57;
   color: white;
-  padding: 1.5rem;
+  padding: 2rem 1rem;
   text-align: center;
+  font-size: 2rem;
+  letter-spacing: 1px;
 }
 
+/* Nav styles */
 nav {
   grid-area: nav;
   background-color: #edefee;
-  padding: 1rem;
+  padding: 1.5rem;
 }
 
 nav ul {
   list-style: none;
   padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  nav ul {
+    flex-direction: row;
+    justify-content: center;
+  }
 }
 
 nav li {
@@ -132,18 +143,21 @@ nav a {
   font-weight: 500;
   padding: 0.5rem 1rem;
   border-radius: 6px;
-  transition: background-color 0.2s ease-in-out;
+  transition: background-color 0.2s ease-in-out, color 0.3s ease;
 }
 
 nav a:hover {
   background-color: #d1d1d1;
+  color: #f4ce14;
 }
 
+/* Main Content */
 main {
   grid-area: main;
   padding: 2rem;
 }
 
+/* Footer */
 footer {
   grid-area: footer;
   background-color: #333;
@@ -152,6 +166,7 @@ footer {
   padding: 1rem;
 }
 
+/* Images */
 img {
   max-width: 100%;
   height: auto;
