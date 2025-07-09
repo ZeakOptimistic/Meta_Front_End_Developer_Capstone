@@ -1,75 +1,122 @@
-import { useState } from 'react';
+// BookingForm.js
+import React, { useState, useEffect } from 'react';
 
-function BookingForm({ availableTimes, dispatch, submitForm }) {
-  const [date, setDate] = useState('');
-  const [time, setTime] = useState('');
-  const [guests, setGuests] = useState(1);
-  const [occasion, setOccasion] = useState('Birthday');
+function BookingForm({ availableTimes, dispatch, onSubmit }) {
+  const [formData, setFormData] = useState({
+    date: '',
+    time: '',
+    guests: '',
+    occasion: ''
+  });
+
+  const [isFormValid, setIsFormValid] = useState(false);
+
+  useEffect(() => {
+    const { date, time, guests, occasion } = formData;
+    const isValid =
+      date &&
+      time &&
+      occasion &&
+      Number(guests) >= 1 &&
+      Number(guests) <= 10;
+
+    setIsFormValid(isValid);
+  }, [formData]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    setFormData((prev) => {
+      const updated = { ...prev, [name]: value };
+
+      if (name === 'date') {
+        dispatch && dispatch({ type: 'UPDATE_TIMES', date: value });
+      }
+
+      return updated;
+    });
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const formData = {
-      date,
-      time,
-      guests,
-      occasion,
-    };
-    submitForm(formData); // ⬅ use prop instead of alert
-  };
-
-  const handleDateChange = (e) => {
-    const newDate = e.target.value;
-    setDate(newDate);
-    dispatch(newDate); // ⬅ call reducer with new date
+    if (isFormValid) {
+      onSubmit && onSubmit(formData);
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ display: 'grid', maxWidth: 300, gap: 16 }}>
-      <label htmlFor="res-date">Choose date</label>
-      <input
-        type="date"
-        id="res-date"
-        value={date}
-        onChange={handleDateChange}
-        required
-      />
+    <section aria-label="Booking Form Section" style={{ padding: '1rem 0' }}>
+      <h2>Book Now</h2>
 
-      <label htmlFor="res-time">Choose time</label>
-      <select
-        id="res-time"
-        value={time}
-        onChange={(e) => setTime(e.target.value)}
-        required
-      >
-        <option value="">-- Select time --</option>
-        {availableTimes.map((t) => (
-          <option key={t}>{t}</option>
-        ))}
-      </select>
+      <form onSubmit={handleSubmit} aria-label="Booking Form">
+        <div style={{ marginBottom: '1rem' }}>
+          <label htmlFor="res-date">Choose date</label><br />
+          <input
+            type="date"
+            id="res-date"
+            name="date"
+            value={formData.date}
+            onChange={handleChange}
+            required
+          />
+        </div>
 
-      <label htmlFor="guests">Number of guests</label>
-      <input
-        type="number"
-        id="guests"
-        min="1"
-        max="10"
-        value={guests}
-        onChange={(e) => setGuests(e.target.value)}
-        required
-      />
+        <div style={{ marginBottom: '1rem' }}>
+          <label htmlFor="res-time">Choose time</label><br />
+          <select
+            id="res-time"
+            name="time"
+            value={formData.time}
+            onChange={handleChange}
+            required
+          >
+            <option value="">Select time</option>
+            {availableTimes.map((time) => (
+              <option key={time} value={time}>{time}</option>
+            ))}
+          </select>
+        </div>
 
-      <label htmlFor="occasion">Occasion</label>
-      <select
-        id="occasion"
-        value={occasion}
-        onChange={(e) => setOccasion(e.target.value)}
-      >
-        <option>Birthday</option>
-        <option>Anniversary</option>
-      </select>
+        <div style={{ marginBottom: '1rem' }}>
+          <label htmlFor="guests">Number of guests</label><br />
+          <input
+            type="number"
+            id="guests"
+            name="guests"
+            value={formData.guests}
+            onChange={handleChange}
+            min="1"
+            max="10"
+            required
+          />
+        </div>
 
-      <button type="submit">Make Your Reservation</button>
-    </form>
+        <div style={{ marginBottom: '1rem' }}>
+          <label htmlFor="occasion">Occasion</label><br />
+          <select
+            id="occasion"
+            name="occasion"
+            value={formData.occasion}
+            onChange={handleChange}
+            required
+          >
+            <option value="">Select occasion</option>
+            <option value="Birthday">Birthday</option>
+            <option value="Anniversary">Anniversary</option>
+          </select>
+        </div>
+
+        <div style={{ marginTop: '1rem' }}>
+          <button
+            type="submit"
+            disabled={!isFormValid}
+            aria-label="On Click Make Your Reservation"
+          >
+            Make Your Reservation
+          </button>
+        </div>
+      </form>
+    </section>
   );
 }
 
